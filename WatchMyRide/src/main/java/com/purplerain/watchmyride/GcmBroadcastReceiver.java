@@ -1,28 +1,26 @@
 package com.purplerain.watchmyride;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
-import com.purplerain.watchmyride.utils.MyPrefs;
+import com.purplerain.watchmyride.utils.AppPreferences;
 
 /**
  * Created by roman on 2/6/14.
  */
-public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
+public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 
     private static final String TAG = "GCM";
-    MyPrefs myPrefs ;
+    AppPreferences appPreferences;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        myPrefs = new MyPrefs(context);
+        appPreferences = new AppPreferences(context);
         Log.d(TAG, "inside onReceive");
 
         String action = intent.getAction();
@@ -40,13 +38,13 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 
         // registration succeeded
         if (registrationId != null) {
-            Log.d(TAG, "Device_reg_id : "+registrationId);
+            Log.d(TAG, "DEVICE REGISTRATION TOKEN : "+registrationId);
 
             // store registration ID on shared preferences
-            myPrefs.putString("DEVICE_REG_ID", registrationId);
+            appPreferences.putString("DEVICE_REG_ID", registrationId);
 
             // notify 3rd-party server about the registered ID
-            generateNotification(context, "Registration Sucessful", "Device register sucessfully!");
+            generateNotification(context, "Registration Successful", "Device registered successfully!");
         }
 
         // unregistration succeeded

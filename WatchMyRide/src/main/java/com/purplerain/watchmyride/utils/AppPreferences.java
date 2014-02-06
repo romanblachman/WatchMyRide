@@ -7,12 +7,12 @@ import android.preference.PreferenceManager;
 /**
  * Created by roman on 2/6/14.
  */
-public class MyPrefs {
+public class AppPreferences {
 
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
 
-    public MyPrefs(Context context){
+    public AppPreferences(Context context){
         sp = PreferenceManager.getDefaultSharedPreferences(context);
         editor = sp.edit();
     }
