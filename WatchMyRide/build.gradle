@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.1"
+    buildToolsVersion '19.0.1'
 
     defaultConfig {
         minSdkVersion 14
@@ -20,4 +20,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    compile files('libs/android-support-v4.jar')
+    compile files('libs/google-play-services.jar')
+    compile files('libs/PayPalAndroidSDK.jar')
 }
