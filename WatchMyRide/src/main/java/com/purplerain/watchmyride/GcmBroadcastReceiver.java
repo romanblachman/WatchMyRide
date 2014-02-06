@@ -80,7 +80,7 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
                         .setContentText(text);
 
         // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(context, MainActivity.class);
+        Intent resultIntent = new Intent(context, WatchRequestsActivity.class);
 
         PendingIntent resultPendingIntent = PendingIntent.getBroadcast(context,0,resultIntent, 0);
         mBuilder.setContentIntent(resultPendingIntent);
