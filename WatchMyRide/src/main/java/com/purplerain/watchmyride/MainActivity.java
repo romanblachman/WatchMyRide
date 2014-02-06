@@ -2,12 +2,15 @@ package com.purplerain.watchmyride;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +21,9 @@ import android.view.ViewGroup;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.purplerain.watchmyride.utils.MyPrefs;
 
 import java.io.IOException;
 
@@ -38,16 +44,20 @@ public class MainActivity extends Activity {
 
         context = getApplicationContext();
 
-//        if (checkPlayServices()) {
-//            gcm = GoogleCloudMessaging.getInstance(this);
-//            regid = getRegistrationId(context);
-//
-//            if (regid.isEmpty()) {
-//                registerInBackground();
-//            }
-//        } else {
-//            Log.i(TAG, "No valid Google Play Services APK found.");
-//        }
+        MyPrefs prefs = new MyPrefs(this);
+        regid = prefs.getString("DEVICE_REG_ID");
+
+        if (regid == null )
+        {
+            Log.d("GCM", "Registration start");
+            // registration
+            Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+            // sets the app name in the intent
+            registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
+            registrationIntent.putExtra("sender", "46009935272"); // replace with your project id
+            startService(registrationIntent);
+        }
+
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
