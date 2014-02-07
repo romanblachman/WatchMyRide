@@ -21,7 +21,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     compile files('libs/android-support-v4.jar')
-    compile files('libs/google-play-services.jar')
     compile files('libs/PayPalAndroidSDK.jar')
-    compile files('libs/Pushwoosh.jar')
+    compile files('libs/gson-2.2.4.jar')
+    compile files('libs/google-play-services.jar')
 }

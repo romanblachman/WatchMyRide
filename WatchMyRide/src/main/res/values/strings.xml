@@ -6,5 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_watch_payment">Pay Up</string>
     <string name="title_activity_watch_requests">Would you keep an eye on these bikes?</string>
+    <string name="update_user_url"></string>
+    <string name="title_activity_map">MapActivity</string>
 
 </resources>

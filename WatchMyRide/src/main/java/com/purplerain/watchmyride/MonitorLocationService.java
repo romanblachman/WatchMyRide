@@ -7,15 +7,29 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
+import android.widget.EditText;
+
+import com.google.gson.Gson;
+import com.purplerain.watchmyride.utils.DataFetcher;
+import com.purplerain.watchmyride.utils.User;
+
+import java.util.ArrayList;
 
 public class MonitorLocationService extends Service implements LocationListener {
 
+    public static final String EXTRA_USER_ID = "com.purplerain.watchmyride.monitoredUserId";
+
     private static final long MIN_TIME_BETWEEN_UPDATES = 30 * 1000; // Milliseconds
     private static final float MIN_DISTANCE_CHANGE_FOR_UPDATES = 50; // Meters
+    private static final String TAG = "GPS";
+
+    private String mUserId;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Location initialLocation = startGettingLocation();
+        mUserId = intent.getStringExtra(EXTRA_USER_ID);
 
         if (initialLocation != null) {
             reportLocationToServer(initialLocation);
@@ -71,11 +85,40 @@ public class MonitorLocationService extends Service implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG, "Location: " + location.toString());
         reportLocationToServer(location);
     }
 
-    private void reportLocationToServer(Location location) {
-        // TODO: Send the location to the server.
+    private void reportLocationToServer(final Location location) {
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                try {
+                    DataFetcher dataFetcher = new DataFetcher();
+                    final String url = getString(R.string.update_user_url);
+
+                    User user = new User();
+                    user.setEmail(mUserId);
+
+                    ArrayList<Double> locationArray = new ArrayList<Double>();
+                    locationArray.add(location.getLatitude());
+                    locationArray.add(location.getLongitude());
+
+                    user.setLocation(locationArray);
+
+                    Gson gson = new Gson();
+                    String json = gson.toJson(user);
+
+                    String result = dataFetcher.makeJsonServiceCall(url, DataFetcher.PUT, json);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+
     }
 
     @Override
